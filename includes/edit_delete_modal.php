@@ -58,11 +58,31 @@
       </div>
       <div class="modal-body">
             <p class="text-center" style="font-size: 12px;">Are you sure you want to Delete</p>
-            <h2 class="text-center" style="font-size: 14px;"><?php echo $row['accountsId'].' '.$row['accountsLevel']; ?></h2>
+            <h2 class="text-center" style="font-size: 14px;"><?php echo 'AccountId: '. $row['accountsId'].' '.' Account Level: '.$row['accountsLevel']; ?></h2>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="font-size: 12px;">Close</button>
         <a href="../pages/delete.php?id=<?php echo $row['id']; ?>" class="btn btn-danger" style="font-size: 12px;">Yes</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Update -->
+<div class="modal fade" id="update_<?php echo $row['id']; ?>" tabindex="-1" aria-labelledby="ModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="ModalLabel" style="font-size: 16px;">Update Last Login Date</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+            <p class="text-center" style="font-size: 12px;">Are you sure you want to Update Last Login Date</p>
+            <h2 class="text-center" style="font-size: 14px;"><?php echo 'AccountId: '. $row['accountsId'].' '.' Account Level: '.$row['accountsLevel']; ?></h2>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="font-size: 12px;">Close</button>
+        <a href="../pages/update_date.php?id=<?php echo $row['id']; ?>" class="btn btn-danger" style="font-size: 12px;">Yes</a>
       </div>
     </div>
   </div>

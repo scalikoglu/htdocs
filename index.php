@@ -64,7 +64,7 @@
 </head>
 <body>
 <div class="container">
-    <h1 class="page-header text-center table-title">Mobile Legends Accounts</h1>
+    <h1 class="page-header text-center table-title">Test Accounts</h1>
     <div class="row">
         <div class="col-12">
             <button type="button" class="btn btn-primary add-new-btn" data-bs-toggle="modal" data-bs-target="#addnew">
@@ -85,16 +85,19 @@
             }
             ?>
             <table class="table table-bordered table-striped" style="margin-top:20px;">
-                <thead class="thead-bg">
-                    <th class="sortable" data-sort="id">ID</th>
-                    <th>AccId</th>
-                    <th>AccPassword</th>
-                    <th>AccName</th>
-                    <th class="sortable" data-sort="level">AccLevel</th>
-                    <th class="sortable" data-sort="lastLogin">AccLastLoginDate</th>
-                    <th>AccLastLoginDay</th>
-                    <th>Action</th>
-                </thead>
+            <thead class="thead-bg">
+    <th class="sortable" data-sort="id">ID</th>
+    <th class="sortable" data-sort="accountsId">AccId</th>
+    <th class="sortable" data-sort="accountsPassword">AccPassword</th>
+    <th>AccName</th>
+    <th class="sortable" data-sort="accountsLevel">AccLevel</th>
+    <th class="sortable" data-sort="accountsLastLogin">AccLastLoginDate</th>
+    <th class="sortable" data-sort="daysSinceLastLogin">AccLastLoginDay</th>
+    <th>Action</th>
+    <th>LoginDateUpdate</th> <!-- Eklenen yeni kolon başlığı -->
+</thead>
+
+
                 <tbody>
                     <?php
                         include_once('includes/connection.php');
@@ -105,29 +108,33 @@
                             $sql = 'SELECT * FROM mobilelegendsaccounts';
                             foreach ($db->query($sql) as $row) {
                     ?>
-                    <tr>
-                        <td><?php echo $row['id']; ?></td>
-                        <td class="copyable" data-text="<?php echo $row['accountsId']; ?>"><?php echo $row['accountsId']; ?>
-                            <div class="popup">Copied: <?php echo $row['accountsId']; ?></div>
-                        </td>
-                        <td class="copyable" data-text="<?php echo $row['accountsPassword']; ?>"><?php echo $row['accountsPassword']; ?>
-                            <div class="popup">Copied: <?php echo $row['accountsPassword']; ?></div>
-                        </td>
-                        <td><?php echo $row['accountsName']; ?></td>
-                        <td><?php echo $row['accountsLevel']; ?></td>
-                        <td><?php echo $row['accountsLastLogin']; ?></td>
-                        <td><?php
-                            $lastLoginDate = new DateTime($row['accountsLastLogin']);
-                            $currentDate = new DateTime();
-                            $daysSinceLastLogin = $currentDate->diff($lastLoginDate)->format('%a');
-                            echo $daysSinceLastLogin;
-                            ?></td>
-                        <td>
-                            <a href="#edit_<?php echo $row['id']; ?>" class="btn btn-success btn-sm" data-bs-toggle="modal"> Edit</a>
-                            <a href="#delete_<?php echo $row['id']; ?>" class="btn btn-danger btn-sm" data-bs-toggle="modal"> Delete</a>
-                        </td>
-                        <?php include('includes/edit_delete_modal.php'); ?>
-                    </tr>
+<tr>
+    <td><?php echo $row['id']; ?></td>
+    <td class="copyable" data-text="<?php echo $row['accountsId']; ?>"><?php echo $row['accountsId']; ?>
+        <div class="popup">Copied: <?php echo $row['accountsId']; ?></div>
+    </td>
+    <td class="copyable" data-text="<?php echo $row['accountsPassword']; ?>"><?php echo $row['accountsPassword']; ?>
+        <div class="popup">Copied: <?php echo $row['accountsPassword']; ?></div>
+    </td>
+    <td><?php echo $row['accountsName']; ?></td>
+    <td><?php echo $row['accountsLevel']; ?></td>
+    <td><?php echo $row['accountsLastLogin']; ?></td>
+    <td><?php
+        $lastLoginDate = new DateTime($row['accountsLastLogin']);
+        $currentDate = new DateTime();
+        $daysSinceLastLogin = $currentDate->diff($lastLoginDate)->format('%a');
+        echo $daysSinceLastLogin;
+        ?></td>
+    <td>
+        <a href="#edit_<?php echo $row['id']; ?>" class="btn btn-success btn-sm" data-bs-toggle="modal"> Edit</a>
+        <a href="#delete_<?php echo $row['id']; ?>" class="btn btn-danger btn-sm" data-bs-toggle="modal"> Delete</a>
+    </td>
+    <td>
+    <a href="#update_<?php echo $row['id']; ?>"  class="btn btn-primary btn-sm" data-bs-toggle="modal">UpdateDate</a>
+    </td>
+    <?php include('includes/edit_delete_modal.php'); ?>
+</tr>
+
                     <?php 
                             }
                         } catch(PDOException $e) {
@@ -140,7 +147,7 @@
             </table>
 
             <div class="text-center" style="margin-top: 20px;">
-                <a href="generate_excel.php?export_excel=true" class="btn btn-success">Export to Excel</a>
+                <a href="includes/generate_excel.php?export_excel=true" class="btn btn-success">Export to Excel</a>
             </div>
 
         </div>
@@ -152,8 +159,11 @@
 <script>
     var sortDirection = {
         id: 1,
-        level: 1,
-        lastLogin: 1
+        accountsId: 1,
+        accountsPassword: 1,
+        accountsLevel: 1,
+        accountsLastLogin: 1,
+        daysSinceLastLogin: 1
     };
 
     function sortTableBy(columnName) {
@@ -168,12 +178,18 @@
             for (i = 1; i < (rows.length - 1); i++) {
                 shouldSwitch = false;
 
-                if (columnName === "id" || columnName === "level") {
+                if (columnName === "id" || columnName === "accountsLevel") {
                     x = parseInt(rows[i].querySelectorAll("td")[columnName === "id" ? 0 : 4].innerText);
                     y = parseInt(rows[i + 1].querySelectorAll("td")[columnName === "id" ? 0 : 4].innerText);
-                } else if (columnName === "lastLogin") {
+                } else if (columnName === "accountsLastLogin") {
                     x = new Date(rows[i].querySelectorAll("td")[5].innerText);
                     y = new Date(rows[i + 1].querySelectorAll("td")[5].innerText);
+                } else if (columnName === "daysSinceLastLogin") {
+                    x = parseInt(rows[i].querySelectorAll("td")[6].innerText);
+                    y = parseInt(rows[i + 1].querySelectorAll("td")[6].innerText);
+                } else {
+                    x = rows[i].querySelectorAll("td")[columnName === "accountsId" ? 1 : 2].innerText.toLowerCase();
+                    y = rows[i + 1].querySelectorAll("td")[columnName === "accountsId" ? 1 : 2].innerText.toLowerCase();
                 }
 
                 if (sortDirection[columnName] === 1) {
@@ -195,15 +211,12 @@
             }
         }
 
-        // Sıralama yönünü değiştir
         sortDirection[columnName] *= -1;
 
-        // Tüm başlıkları sıralama oklarını temizle
         document.querySelectorAll("th.sortable").forEach(function(el) {
             el.classList.remove("descending");
         });
 
-        // Sıralanan sütunun başlığına ok ekle
         var sortedHeader = document.querySelector("th.sortable[data-sort='" + columnName + "']");
         sortedHeader.classList.add(sortDirection[columnName] === 1 ? "descending" : "");
     }
@@ -240,7 +253,32 @@
         document.getElementById("searchInput").addEventListener("input", function() {
             searchTable(this.value);
         });
+
+        var timeoutId;
+
+        $('.copyable').click(function() {
+    clearTimeout(timeoutId);
+    
+    var text = $(this).data('text');
+    var tempInput = $('<input>');
+    $('body').append(tempInput);
+    tempInput.val(text).select();
+    document.execCommand('copy');
+    tempInput.remove();
+
+    $('.copyable').removeClass('copied'); // Diğer metinleri sıfırla
+    $('.popup').fadeOut(); // Diğer pop-up'ları sakla
+
+    $(this).addClass('copied');
+    $(this).find('.popup').fadeIn();
+    
+    // Sadece pop-up'ın 3 saniye sonra kaybolmasını sağla
+    timeoutId = setTimeout(function() {
+        $('.popup').fadeOut();
+    }, 3000);
+        });
     });
 </script>
+
 </body>
 </html>
