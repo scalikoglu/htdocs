@@ -10,7 +10,7 @@ Bu proje, hesapları yönetmek için oluşturulmuş basit bir PHP CRUD (Create, 
 - MySQL: Veritabanı yönetimi için MySQL kullanıldı.
 - jQuery: Arayüz etkileşimleri ve dinamik özellikler için jQuery kütüphanesi kullanıldı.
 
-![Proje Önizleme Resmi](assets/image.png)
+![Proje Önizleme Resmi](assets/php_crud.png)
 
 ## Özellikler
 
